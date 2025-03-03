@@ -103,3 +103,8 @@ app.use((err, req, res, next) => {
     }
     next(err);
 });
+
+//--------------------------
+// const newsfeedRoutes = require('./feed');  // Correct filename
+// app.use('/api', feedRoutes); // ✅ Prefix feed.js routes with '/api'
+// app.use('/feed', newsfeedRoutes);
