@@ -1,0 +1,25 @@
+<!-- views/home.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neighborhood Community App</title>
+</head>
+<body>
+    <h1>Welcome to the Neighborhood Community App</h1>
+    
+    <% if (typeof user !== 'undefined' && user) { %>
+        <p>You are logged in as <%= user.name %></p>
+        <a href="/profile">View Profile</a>
+        <form action="/auth/logout" method="POST">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <button type="submit">Logout</button>
+        </form>
+    <% } else { %>
+        <p>Please login or register to continue</p>
+        <a href="/login">Login</a>
+        <a href="/register">Register</a>
+    <% } %>
+</body>
+</html>
