@@ -13,7 +13,7 @@ const app = express();
 app.set('view engine', 'ejs');
 
 // ✅ Middleware Order (Must be in this order)
-app.use(express.json()); 
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // ✅ Secure Session Setup
@@ -21,10 +21,10 @@ app.use(session({
     secret: process.env.SESSION_SECRET || 'yourSecretKey',
     resave: false,
     saveUninitialized: true,
-    cookie: { 
-        secure: process.env.NODE_ENV === 'production', 
-        httpOnly: true, 
-        sameSite: 'strict' 
+    cookie: {
+        secure: process.env.NODE_ENV === 'production',
+        httpOnly: true,
+        sameSite: 'strict'
     }
 }));
 
@@ -46,7 +46,7 @@ app.use(cors({ origin: "http://localhost:4538", credentials: true }));
 
 // Homepage route
 app.get('/', (req, res) => {
-    res.render('home', { 
+    res.render('home', {
         csrfToken: req.csrfToken(),
         user: req.user // This will be undefined if not logged in
     });
@@ -54,29 +54,29 @@ app.get('/', (req, res) => {
 
 // ✅ Routes for page rendering
 app.get('/login', (req, res) => {
-    res.render('login', { 
-        error: null, 
-        csrfToken: req.csrfToken() 
+    res.render('login', {
+        error: null,
+        csrfToken: req.csrfToken()
     });
 });
 
 app.get('/register', (req, res) => {
-    res.render('register', { 
-        errors: [], 
-        name: '', 
-        email: '', 
-        csrfToken: req.csrfToken() 
+    res.render('register', {
+        errors: [],
+        name: '',
+        email: '',
+        csrfToken: req.csrfToken()
     });
 });
 
-app.get('/profile', authenticateToken, (req, res) => {
-    res.render('profile', { 
-        user: req.user,
-        csrfToken: req.csrfToken() 
-    });
-});
+// app.get('/profile', authenticateToken, (req, res) => {
+//     res.render('profile', {
+//         user: req.user,
+//         csrfToken: req.csrfToken()
+//     });
+// });
 
-// ✅ API Routes
+// ✅ API Routes (for authentication and post routes)
 app.use('/auth', authRouter);
 app.use('/', postRoutes);
 

@@ -4,298 +4,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NextDoor - Feed</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 0;
-            background-color: #f5f5f5;
-            color: #333;
-        }
-        
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        
-        header {
-            background-color: #4a76a8;
-            color: white;
-            padding: 10px 0;
-            margin-bottom: 20px;
-        }
-        
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-        
-        nav a {
-            color: white;
-            margin-left: 15px;
-            text-decoration: none;
-        }
-        
-        .new-post {
-            background: white;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 20px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-        
-        .post-form {
-            display: flex;
-            flex-direction: column;
-        }
-        
-        textarea, input, select {
-            margin-bottom: 10px;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        
-        button {
-            padding: 8px 16px;
-            background-color: #4a76a8;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        
-        .posts {
-            margin-top: 20px;
-        }
-        
-        .post {
-            background: white;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-        
-        .post-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-        }
-        
-        .post-author {
-            font-weight: bold;
-        }
-        
-        .post-category {
-            background-color: #e0e0e0;
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 0.8em;
-        }
-        
-        .post-category.event {
-            background-color: #d1e7dd;
-            color: #0f5132;
-        }
-        
-        .post-category.lost_found {
-            background-color: #f8d7da;
-            color: #842029;
-        }
-        
-        .post-title {
-            font-size: 1.2em;
-            margin: 10px 0;
-        }
-        
-        .post-content {
-            margin-bottom: 15px;
-        }
-        
-        .post-actions {
-            display: flex;
-            gap: 10px;
-            border-top: 1px solid #eee;
-            padding-top: 10px;
-        }
-        
-        .post-actions form {
-            display: inline;
-        }
-        
-        .additional-fields {
-            display: none;
-            padding: 10px;
-            background-color: #f9f9f9;
-            margin-top: 10px;
-            border-radius: 4px;
-        }
-        
-        .show-additional-field .additional-fields {
-            display: block;
-        }
-    </style>
+    <title>Your Feed</title>
 </head>
 <body>
-    <header>
-        <div class="header-content">
-            <h1>NextDoor</h1>
-            <nav>
-                <a href="/feed">Feed</a>
-                <a href="/profile">Profile</a>
-                <form action="/auth/logout" method="POST" style="display: inline;">
-                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                    <button type="submit" style="background: none; border: none; color: white; cursor: pointer;">Logout</button>
-                </form>
-            </nav>
-        </div>
-    </header>
+    <h1>Welcome, <%= user.name %>!</h1>
+    <a href="/profile">Go to Profile</a>
+    <br>
+    <br>
+    <hr>
+    <h2>Your Feed</h2>
 
-    <div class="container">
-        <div class="new-post">
-            <h2>Create a New Post</h2>
-            <form class="post-form" action="/posts" method="POST">
-                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                
-                <select name="category" id="category-selector" required>
-                    <option value="">Select Post Type</option>
-                    <option value="general">General</option>
-                    <option value="event">Community Event</option>
-                    <option value="lost_found">Lost & Found</option>
-                </select>
-                
-                <input type="text" name="title" placeholder="Title" required>
-                <textarea name="content" placeholder="What's on your mind?" rows="3" required></textarea>
-                <input type="text" name="location" placeholder="Location (optional)">
-                
-                <!-- Event-specific fields -->
-                <div id="event-fields" class="additional-fields">
-                    <input type="datetime-local" name="event_date" placeholder="Event Date & Time">
-                    <input type="text" name="event_location" placeholder="Event Location">
-                </div>
-                
-                <!-- Lost & Found specific fields -->
-                <div id="lost-found-fields" class="additional-fields">
-                    <textarea name="lost_item_description" placeholder="Item Description" rows="2"></textarea>
-                </div>
-                
-                <button type="submit">Post</button>
-            </form>
-        </div>
-        
-        <div class="posts">
-            <h2>Your Feed</h2>
+    <!-- Post Creation Form -->
+    <h3>Create a Post</h3>
+    <form action="/feed/create-post" method="POST">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <label for="content">Post Content:</label>
+        <textarea id="content" name="content" required></textarea><br><br>
+
+        <label for="category">Category:</label>
+        <select id="category" name="category">
+            <option value="discussion">Discussion</option>
+            <option value="event">Event</option>
+            <option value="lost_and_found">Lost and Found</option>
+            <option value="buy_sell">Buy and Sell</option>
             
-            <% if (posts.length === 0) { %>
-                <p>No posts yet. Follow more users or create your first post!</p>
-            <% } %>
-            
+        </select><br><br>
+
+        <button type="submit">Post</button>
+    </form>
+
+    <!-- Display posts -->
+    <% if (posts.length > 0) { %>
+        <ul>
             <% posts.forEach(post => { %>
-                <div class="post">
-                    <div class="post-header">
-                        <span class="post-author"><%= post.user_name %></span>
-                        <span class="post-category <%= post.category %>"><%= post.category.replace('_', ' ').toUpperCase() %></span>
-                    </div>
-                    
-                    <h3 class="post-title"><%= post.title %></h3>
-                    <div class="post-content"><%= post.content %></div>
-                    
-                    <% if (post.category === 'event' && post.event_date) { %>
-                        <div class="post-event-details">
-                            <p>📅 <%= new Date(post.event_date).toLocaleString() %></p>
-                            <% if (post.event_location) { %>
-                                <p>📍 <%= post.event_location %></p>
-                            <% } %>
-                        </div>
-                    <% } %>
-                    
-                    <% if (post.category === 'lost_found' && post.lost_item_description) { %>
-                        <div class="post-lost-found-details">
-                            <p><strong>Item Description:</strong> <%= post.lost_item_description %></p>
-                            <% if (post.location) { %>
-                                <p>📍 Last seen at <%= post.location %></p>
-                            <% } %>
-                        </div>
-                    <% } %>
-                    
-                    <div class="post-actions">
-                        <a href="/posts/<%= post.id %>">
-                            Comments (<%= post.comment_count %>)
-                        </a>
-                        
-                        <form action="/posts/<%= post.id %>/react" method="POST">
-                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                            <input type="hidden" name="reaction_type" value="like">
-                            <button type="submit" <%= post.user_liked ? 'style="color: #4a76a8; font-weight: bold;"' : '' %>>
-                                👍 <%= post.like_count || 0 %>
-                            </button>
-                        </form>
-                        
-                        <% if (post.category === 'event') { %>
-                            <form action="/posts/<%= post.id %>/react" method="POST">
-                                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                                <input type="hidden" name="reaction_type" value="going">
-                                <button type="submit" <%= post.user_reaction === 'going' ? 'style="color: #0f5132; font-weight: bold;"' : '' %>>
-                                    Going
-                                </button>
-                            </form>
-                            
-                            <form action="/posts/<%= post.id %>/react" method="POST">
-                                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                                <input type="hidden" name="reaction_type" value="interested">
-                                <button type="submit" <%= post.user_reaction === 'interested' ? 'style="color: #084298; font-weight: bold;"' : '' %>>
-                                    Interested
-                                </button>
-                            </form>
-                        <% } %>
-                        
-                        <% if (post.category === 'lost_found') { %>
-                            <form action="/posts/<%= post.id %>/react" method="POST">
-                                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                                <input type="hidden" name="reaction_type" value="found">
-                                <button type="submit" <%= post.user_reaction === 'found' ? 'style="color: #842029; font-weight: bold;"' : '' %>>
-                                    I Found It!
-                                </button>
-                            </form>
-                        <% } %>
-                        
-                        <% if (post.user_id === user.id) { %>
-                            <form action="/posts/<%= post.id %>/delete" method="POST" onsubmit="return confirm('Are you sure you want to delete this post?');">
-                                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                                <button type="submit" style="color: #dc3545;">Delete</button>
-                            </form>
-                        <% } %>
-                    </div>
-                </div>
-            <% }); %>
-        </div>
-    </div>
+                <li>
+                    <p><strong><%= post.user_name %></strong>: <%= post.content %></p>
+                    <p><small>Category: <%= post.category %> | Posted on <%= post.created_at %></small></p>
+                </li>
+            <% }) %>
+        </ul>
+    <% } else { %>
+        <p>No posts to show.</p>
+    <% } %>
 
-    <script>
-        // Handle showing/hiding additional fields based on post type
-        document.getElementById('category-selector').addEventListener('change', function() {
-            const eventFields = document.getElementById('event-fields');
-            const lostFoundFields = document.getElementById('lost-found-fields');
-            
-            // Hide all first
-            eventFields.style.display = 'none';
-            lostFoundFields.style.display = 'none';
-            
-            // Show relevant fields
-            if (this.value === 'event') {
-                eventFields.style.display = 'block';
-            } else if (this.value === 'lost_found') {
-                lostFoundFields.style.display = 'block';
-            }
-        });
-    </script>
+
+
+    <!-- <% if (posts.length > 0) { %>
+        <ul>
+            <% posts.forEach(post => { %>
+                <li>
+                    <p><strong><%= post.user_name %></strong>: <%= post.content %></p>
+                    <p><small>Posted on <%= post.created_at %></small></p>
+                </li>
+            <% }) %>
+        </ul>
+    <% } else { %>
+        <p>No posts to show.</p>
+    <% } %> -->
+
 </body>
 </html>

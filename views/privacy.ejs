@@ -1,0 +1,30 @@
+<!-- views/privacy.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Settings</title>
+</head>
+<body>
+    <h1>Privacy Settings</h1>
+    <form action="/profile/privacy" method="POST">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        
+        <div>
+            <label for="profile-visibility">Profile Visibility:</label>
+            <select name="profile-visibility" id="profile-visibility">
+                <option value="public" <% if (user.profile_visibility === 'public') { %>selected<% } %>>Public</option>
+                <option value="friends" <% if (user.profile_visibility === 'friends') { %>selected<% } %>>Friends Only</option>
+                <option value="private" <% if (user.profile_visibility === 'private') { %>selected<% } %>>Private</option>
+            </select>
+        </div>
+
+        <div>
+            <button type="submit">Save Privacy Settings</button>
+        </div>
+    </form>
+    <br>
+    <a href="/profile">Back to Profile</a>
+</body>
+</html>

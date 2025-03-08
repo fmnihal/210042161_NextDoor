@@ -89,25 +89,64 @@ router.post('/register', async (req, res) => {
     }
 });
 
+// router.post('/login', async (req, res) => {
+//     const { email, password } = req.body;
+//     if (!email || !password) {
+//         return res.status(400).render('login', { error: "Email and password are required.", csrfToken: req.csrfToken?.() || "" });
+//     }
+//     try {
+//         const user = await getUserByEmail(email);
+//         if (!user || !(await bcrypt.compare(password, user.password))) {
+//             return res.status(403).render('login', { error: "Invalid credentials.", csrfToken: req.csrfToken?.() || "" });
+//         }
+//         const accessToken = generateAccessToken({ name: user.name, email: user.email });
+//         const refreshToken = generateRefreshToken({ name: user.name, email: user.email });
+//         res.cookie('token', accessToken, { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict', maxAge: 3600 * 1000 });
+//         res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict', maxAge: 7 * 24 * 60 * 60 * 1000 });
+//         res.redirect('/profile');
+//     } catch (error) {
+//         res.render('login', { error: "Server error.", csrfToken: req.csrfToken?.() || "" });
+//     }
+// });
+
 router.post('/login', async (req, res) => {
-    const { email, password } = req.body;
-    if (!email || !password) {
-        return res.status(400).render('login', { error: "Email and password are required.", csrfToken: req.csrfToken?.() || "" });
-    }
     try {
-        const user = await getUserByEmail(email);
-        if (!user || !(await bcrypt.compare(password, user.password))) {
-            return res.status(403).render('login', { error: "Invalid credentials.", csrfToken: req.csrfToken?.() || "" });
+        const { email, password } = req.body;
+
+        // Find user by email
+        const userQuery = await pool.query("SELECT * FROM users WHERE email = $1", [email]);
+        if (userQuery.rows.length === 0) {
+            return res.status(400).json({ error: "Invalid email or password" });
         }
-        const accessToken = generateAccessToken({ name: user.name, email: user.email });
-        const refreshToken = generateRefreshToken({ name: user.name, email: user.email });
-        res.cookie('token', accessToken, { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict', maxAge: 3600 * 1000 });
-        res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict', maxAge: 7 * 24 * 60 * 60 * 1000 });
-        res.redirect('/profile');
-    } catch (error) {
-        res.render('login', { error: "Server error.", csrfToken: req.csrfToken?.() || "" });
+
+        const user = userQuery.rows[0];
+
+        // Compare password
+        const passwordMatch = await bcrypt.compare(password, user.password);
+        if (!passwordMatch) {
+            return res.status(400).json({ error: "Invalid email or password" });
+        }
+
+        // Generate JWT Access Token
+        const accessToken = generateAccessToken({ id: user.id, name: user.name, email: user.email });
+
+        // Set the token as a cookie
+        res.cookie('token', accessToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production', // set to true in production
+            sameSite: 'strict', // prevents CSRF attacks
+            maxAge: 3600 * 1000 // 1 hour
+        });
+
+        // Redirect user to the feed page after login
+        res.redirect('/feed');
+        
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Server error" });
     }
 });
+
 
 router.post('/logout', (req, res) => {
     const refreshToken = req.cookies.refreshToken;

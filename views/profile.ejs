@@ -9,7 +9,40 @@
 <body>
     <h1>Welcome, <%= user.name %>!</h1>
     <p>Email: <%= user.email %></p>
-    
+
+    <!-- Display GitHub Profile Link -->
+    <% if (user.github) { %>
+        <h2>GitHub Profile</h2>
+        <p><a href="<%= user.github %>" target="_blank">Click here to view your GitHub profile</a></p>
+    <% } else { %>
+        <p>No GitHub profile linked yet.</p>
+    <% } %>
+
+    <!-- Only show follow/unfollow buttons if the logged-in user is viewing someone else's profile -->
+    <% if (user.id !== profileUser.id) { %> 
+        <% const isFollowing = following.includes(profileUser.id); %>
+        <% if (isFollowing) { %>
+            <form action="/profile/unfollow" method="POST">
+                <input type="hidden" name="userIdToUnfollow" value="<%= profileUser.id %>">
+                <button type="submit">Unfollow</button>
+            </form>
+        <% } else { %>
+            <form action="/profile/follow" method="POST">
+                <input type="hidden" name="userIdToFollow" value="<%= profileUser.id %>">
+                <button type="submit">Follow</button>
+            </form>
+        <% } %>
+    <% } %>
+
+    <a href="/feed">Back to Feed</a>
+
+    <h2>Profile Actions</h2>
+    <ul>
+        <li><a href="/profile/settings">Settings</a></li>
+        <li><a href="/profile/add-links">Add External Links</a></li>
+        <li><a href="/profile/notifications">View Notifications</a></li>
+    </ul>
+
     <form action="/auth/logout" method="POST">
         <input type="hidden" name="_csrf" value="<%= csrfToken %>">
         <button type="submit">Logout</button>

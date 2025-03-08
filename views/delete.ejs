@@ -1,0 +1,18 @@
+<!-- views/delete.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Account</title>
+</head>
+<body>
+    <h1>Delete Account</h1>
+    <form action="/profile/settings/delete" method="POST">
+        <p>Are you sure you want to delete your account? This action is irreversible.</p>
+        <button type="submit">Delete Account</button>
+    </form>
+
+    <a href="/profile/settings">Back to Settings</a>
+</body>
+</html>

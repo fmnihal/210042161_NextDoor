@@ -1,0 +1,23 @@
+<!-- views/notifications.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notification Settings</title>
+</head>
+<body>
+    <h1>Your Notifications</h1>
+    <% if (notifications.length > 0) { %>
+        <ul>
+            <% notifications.forEach(notification => { %>
+                <li><%= notification.message %></li>
+            <% }) %>
+        </ul>
+    <% } else { %>
+        <p>No notifications available.</p>
+    <% } %>
+
+    <a href="/profile/settings">Back to Settings</a>
+</body>
+</html>

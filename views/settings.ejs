@@ -1,0 +1,120 @@
+<!-- views/settings.ejs
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings</title>
+</head>
+<body>
+    <h1>Settings</h1>
+    
+    Change Password Form -->
+    <!-- <h2>Change Password</h2>
+    <form action="/profile/settings/password" method="POST">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <div>
+            <label for="current-password">Current Password:</label>
+            <input type="password" id="current-password" name="current-password" required>
+        </div>
+        <div>
+            <label for="new-password">New Password:</label>
+            <input type="password" id="new-password" name="new-password" required>
+        </div>
+        <div>
+            <label for="confirm-password">Confirm New Password:</label>
+            <input type="password" id="confirm-password" name="confirm-password" required>
+        </div>
+        <button type="submit">Update Password</button>
+    </form>
+
+    Change Username Form
+    <h2>Change Username</h2>
+    <form action="/profile/settings/username" method="POST">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <div>
+            <label for="new-username">New Username:</label>
+            <input type="text" id="new-username" name="new-username" value="<%= user.name %>" required>
+        </div>
+        <button type="submit">Update Username</button>
+    </form>
+
+    Change Email Form
+    <h2>Change Email</h2>
+    <form action="/profile/settings/email" method="POST">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <div>
+            <label for="new-email">New Email:</label>
+            <input type="email" id="new-email" name="new-email" value="<%= user.email %>" required>
+        </div>
+        <button type="submit">Update Email</button>
+    </form>
+
+    Notification Settings
+    <h2>Notification Settings</h2>
+    <form action="/profile/settings/notifications" method="POST">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <div>
+            <label for="email-notifications">Email Notifications:</label>
+            <input type="checkbox" name="email-notifications" id="email-notifications" <% if (user.email_notifications) { %>checked<% } %>>
+        </div>
+        <div>
+            <label for="push-notifications">Push Notifications:</label>
+            <input type="checkbox" name="push-notifications" id="push-notifications" <% if (user.push_notifications) { %>checked<% } %>>
+        </div>
+        <button type="submit">Save Notification Settings</button>
+    </form>
+
+    Profile Deactivation
+    <h2>Deactivate Account</h2>
+    <form action="/profile/settings/deactivate" method="POST">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <button type="submit">Deactivate Account</button>
+    </form>
+
+    Account Deletion
+    <h2>Delete Account</h2>
+    <form action="/profile/settings/delete" method="POST">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <button type="submit">Delete Account</button>
+    </form>
+
+    <br>
+    <a href="/profile">Back to Profile</a>
+</body>
+</html> -->
+
+<!-- views/settings.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings</title>
+</head>
+<body>
+    <h1>Settings</h1>
+    
+    <!-- Links to various settings pages -->
+    <h2>Account Settings</h2>
+    <ul>
+        <li><a href="/profile/settings/password">Change Password</a></li>
+        <li><a href="/profile/settings/username">Change Username</a></li>
+        <li><a href="/profile/settings/email">Change Email</a></li>
+    </ul>
+
+    <h2>Notification Settings</h2>
+    <ul>
+        <li><a href="/profile/settings/notifications">Notification Settings</a></li>
+    </ul>
+
+    <h2>Account Management</h2>
+    <ul>
+        <li><a href="/profile/settings/deactivate">Deactivate Account</a></li>
+        <li><a href="/profile/settings/delete">Delete Account</a></li>
+    </ul>
+
+    <br>
+    <a href="/profile">Back to Profile</a>
+</body>
+</html>

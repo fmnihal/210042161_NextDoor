@@ -1,0 +1,20 @@
+<!-- views/deactivate.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deactivate Account</title>
+</head>
+<body>
+    <h1>Are you sure you want to deactivate your account?</h1>
+    <form action="/profile/deactivate" method="POST">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <div>
+            <button type="submit">Deactivate Account</button>
+        </div>
+    </form>
+    <br>
+    <a href="/profile">Back to Profile</a>
+</body>
+</html>
